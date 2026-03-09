@@ -21,3 +21,6 @@
 - `index.html`: 核心網頁與預測邏輯
 - `心臟病風險預測.pbix`: Power BI 原始報表檔案
 - `firebase.json`: 佈署設定檔
+
+## 參考資料
+https://www.kaggle.com/datasets/ritwikb3/heart-disease-statlog
