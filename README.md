@@ -3,8 +3,9 @@
 # 心臟病風險預測與數據分析系統 
 本專案為實習期間開發之醫療數據解決方案，結合了統計看板分析與即時風險預測。
 
-## 線上展示
+## 專案展示
 - **Web App**: [https://heart-risk-predictor-2026.web.app/](https://heart-risk-predictor-2026.web.app/)
+- PowerBI:https://app.powerbi.com/view?r=eyJrIjoiNjJkMzM0Y2EtNmQ2MC00MjFhLTg5Y2UtYzViOWQwOTM2MDI2IiwidCI6ImExMmQ5NGFkLTk0YjktNGRhNi05ZTk1LThhYzdmZThiM2IwMCIsImMiOjEwfQ%3D%3D
 
 ## 技術棧
 - **數據分析**: Power BI (ETL, DAX, 可視化分析)
