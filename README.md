@@ -24,4 +24,4 @@
 - `firebase.json`: 佈署設定檔
 
 ## 參考資料
-https://www.kaggle.com/datasets/ritwikb3/heart-disease-statlog
+Heart Disease Statlog:https://www.kaggle.com/datasets/ritwikb3/heart-disease-statlog
