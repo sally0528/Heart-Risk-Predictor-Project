@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心臟病風險預測系統</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 850px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h2 { color: #c0392b; text-align: center; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; margin-bottom: 25px; }
+        
+        .dashboard-container { 
+            width: 100%; 
+            background-color: #fff; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            margin-bottom: 30px; 
+            border: 1px solid #eee;
+            text-align: center;
+        }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .input-group { display: flex; flex-direction: column; }
+        label { margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        select, input { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background-color: #fff; }
+        .full-width { grid-column: span 2; }
+        
+        button { margin-top: 25px; padding: 15px; background-color: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; transition: 0.3s; width: 100%; }
+        button:hover { background-color: #c0392b; transform: translateY(-2px); }
+        
+        #result { 
+            margin-top: 25px; 
+            padding: 25px; 
+            border-radius: 12px; 
+            display: none; 
+            line-height: 1.6;
+        }
+
+        .suggestion-list { margin: 15px 0 0 20px; padding: 0; color: #444; }
+        .suggestion-list li { margin-bottom: 8px; }
+        
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #888; border-top: 1px solid #eee; padding-top: 15px; }
+        hr { border: 0; height: 1px; background: #eee; margin: 40px 0; }
+        .section-title { font-size: 18px; color: #2c3e50; margin-bottom: 15px; font-weight: bold; display: flex; align-items: center; }
+        .section-title::before { content: "📊"; margin-right: 10px; }
+        .calc-title::before { content: "🩺"; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>心臟病風險評估系統</h2>
+
+    <div class="section-title">數據統計與分析看板</div>
+    <div class="dashboard-container">
+        <iframe title="心臟病風險預測" width="100%" height="450" 
+                src="https://app.powerbi.com/view?r=eyJrIjoiNjJkMzM0Y2EtNmQ2MC00MjFhLTg5Y2UtYzViOWQwOTM2MDI2IiwidCI6ImExMmQ5NGFkLTk0YjktNGRhNi05ZTk1LThhYzdmZThiM2IwMCIsImMiOjEwfQ%3D%3D" 
+                frameborder="0" allowFullScreen="true">
+        </iframe>
+    </div>
+
+    <hr>
+
+    <div class="section-title calc-title">個人風險即時預測</div>
+    <div class="grid">
+        <div class="input-group">
+            <label for="age">年齡 (age):</label>
+            <input type="number" id="age" value="50">
+        </div>
+        <div class="input-group">
+            <label for="trestbps">靜態血壓 (trestbps):</label>
+            <input type="number" id="trestbps" value="120">
+        </div>
+        <div class="input-group">
+            <label for="chol">血清膽固醇 (chol):</label>
+            <input type="number" id="chol" value="200">
+        </div>
+        <div class="input-group">
+            <label for="thalach">最大心率 (thalach):</label>
+            <input type="number" id="thalach" value="150">
+        </div>
+        <div class="input-group">
+            <label for="oldpeak">ST 段下降值 (oldpeak):</label>
+            <input type="number" step="0.1" id="oldpeak" value="1.0">
+        </div>
+
+        <div class="input-group">
+            <label for="sex">性別 (sex):</label>
+            <select id="sex">
+                <option value="1">男 (1)</option>
+                <option value="0">女 (0)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="cp">胸痛類型 (cp):</label>
+            <select id="cp">
+                <option value="0">典型心絞痛 (0)</option>
+                <option value="1">非典型心絞痛 (1)</option>
+                <option value="2">非心絞痛 (2)</option>
+                <option value="3">無症狀 (3)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="fbs">空腹血糖 > 120 (fbs):</label>
+            <select id="fbs">
+                <option value="0">否 (0)</option>
+                <option value="1">是 (1)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="restecg">靜態心電圖 (restecg):</label>
+            <select id="restecg">
+                <option value="0">正常 (0)</option>
+                <option value="1">ST-T 波異常 (1)</option>
+                <option value="2">左心室肥大 (2)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="exang">運動引起心絞痛 (exang):</label>
+            <select id="exang">
+                <option value="0">否 (0)</option>
+                <option value="1">是 (1)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="slope">ST 段斜率 (slope):</label>
+            <select id="slope">
+                <option value="0">往上 (0)</option>
+                <option value="1">平坦 (1)</option>
+                <option value="2">往下 (2)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="ca">血管阻塞數量 (ca):</label>
+            <select id="ca">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+        </div>
+        <div class="input-group full-width">
+            <label for="thal">地中海貧血 (thal):</label>
+            <select id="thal">
+                <option value="1">正常 (1)</option>
+                <option value="2">固定缺陷 (2)</option>
+                <option value="3">可逆缺陷 (3)</option>
+            </select>
+        </div>
+    </div>
+
+    <button onclick="handleCalculate()">立即開始分析風險指標</button>
+
+    <div id="result"></div>
+    <div class="footer">本工具僅供學術研究與實習專案參考，臨床診斷請務必諮詢專業醫師。</div>
+</div>
+
+<script>
+    // 邏輯迴歸模型權重
+    const modelWeights = {
+        intercept: -6.2778,
+        ca: 1.151810,
+        sex: 1.142076,
+        exang: 0.761307,
+        cp: 0.384061,
+        oldpeak: 0.321104,
+        slope: 0.319895,
+        thal: 0.299352,
+        restecg: 0.215360,
+        trestbps: 0.025665,
+        chol: 0.005694,
+        age: -0.011457,
+        thalach: -0.022108,
+        fbs: -0.925790
+    };
+
+    function handleCalculate() {
+        const inputs = {
+            age: parseFloat(document.getElementById('age').value),
+            sex: parseFloat(document.getElementById('sex').value),
+            cp: parseFloat(document.getElementById('cp').value),
+            trestbps: parseFloat(document.getElementById('trestbps').value),
+            chol: parseFloat(document.getElementById('chol').value),
+            fbs: parseFloat(document.getElementById('fbs').value),
+            restecg: parseFloat(document.getElementById('restecg').value),
+            thalach: parseFloat(document.getElementById('thalach').value),
+            exang: parseFloat(document.getElementById('exang').value),
+            oldpeak: parseFloat(document.getElementById('oldpeak').value),
+            slope: parseFloat(document.getElementById('slope').value),
+            ca: parseFloat(document.getElementById('ca').value),
+            thal: parseFloat(document.getElementById('thal').value)
+        };
+
+        // 1. 計算機率
+        let z = modelWeights.intercept;
+        let contributions = [];
+        
+        for (const [key, val] of Object.entries(inputs)) {
+            const score = modelWeights[key] * val;
+            z += score;
+            const label = document.querySelector(`label[for="${key}"]`)?.innerText.split('(')[0].trim() || key;
+            contributions.push({ name: label, score: score });
+        }
+
+        const probability = 1 / (1 + Math.exp(-z));
+        const riskPercent = (probability * 100).toFixed(2);
+
+        // 2. 醫學標準對照建議
+        const suggestions = [];
+        if (inputs.ca > 0) suggestions.push(`血管阻塞數量：目前為 ${inputs.ca}，正常理想應為 <b>0</b>。`);
+        if (inputs.chol > 200) suggestions.push(`血清膽固醇：目前為 ${inputs.chol}，建議控制在 <b>200 mg/dl</b> 以下。`);
+        if (inputs.trestbps > 130) suggestions.push(`靜態血壓：目前為 ${inputs.trestbps}，建議控制在 <b>130 mmHg</b> 以下。`);
+        if (inputs.oldpeak >= 1.0) suggestions.push(`ST 段下降值：目前為 ${inputs.oldpeak}，理想應低於 <b>1.0</b>。`);
+        if (inputs.fbs === 1) suggestions.push(`空腹血糖：目前高於 120 mg/dl，需注意血糖管理。`);
+        if (inputs.exang === 1) suggestions.push(`運動耐受度：出現運動引起的心絞痛，建議諮詢醫師運動強度限制。`);
+
+        // 3. 找出前三大風險因子
+        const topFactors = contributions
+            .filter(f => f.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 3)
+            .map(f => `<b style="color:#c0392b">${f.name}</b>`)
+            .join('、');
+
+        // 4. 更新結果顯示區
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block';
+        
+        let html = `<div style="text-align:center; font-size:28px; font-weight:bold; margin-bottom:15px;">評估患病機率為：${riskPercent}%</div>`;
+        
+        if (riskPercent > 50) {
+            resultDiv.style.backgroundColor = '#fdf2f2';
+            resultDiv.style.border = '2px solid #f8d7da';
+            resultDiv.style.color = '#333';
+            html += `
+                <div style="border-top: 1px solid #ecc; padding-top: 15px;">
+                    <p style="font-size:16px;">⚠️ <b>關鍵風險來源：</b>您的 ${topFactors} 指標在模型中顯示較高的關聯性。</p>
+                    <p style="font-size:16px;">✅ <b>健康優化具體建議：</b></p>
+                    <ul class="suggestion-list">
+                        ${suggestions.length > 0 ? suggestions.map(s => `<li>${s}</li>`).join('') : '<li>數值尚在正常參考範圍，但多項指標累積加權後風險偏高，建議維持規律運動與作息。</li>'}
+                    </ul>
+                </div>`;
+        } else {
+            resultDiv.style.backgroundColor = '#f0f9eb';
+            resultDiv.style.border = '2px solid #e1f3d8';
+            resultDiv.style.color = '#27ae60';
+            resultDiv.style.textAlign = 'center';
+            html += `<p style="font-size:18px;">您的指標相對穩定，患病機率較低。請繼續保持良好的生活方式！</p>`;
+        }
+
+        resultDiv.innerHTML = html;
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
